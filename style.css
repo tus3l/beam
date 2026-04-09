@@ -1,0 +1,433 @@
+/* ============================================
+   JBeam Vault — Styles
+   ============================================ */
+
+:root {
+    --bg-primary: #07080c;
+    --bg-secondary: #0d0f17;
+    --neon-blue: #00d4ff;
+    --neon-purple: #a855f7;
+    --neon-cyan: #22d3ee;
+    --neon-orange: #fb923c;
+    --glass-bg: rgba(15, 20, 40, 0.45);
+    --glass-border: rgba(0, 212, 255, 0.25);
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg-primary);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================
+   Main Container
+   ============================================ */
+.main-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0, 212, 255, 0.04) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 20% 80%, rgba(168, 85, 247, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 80% at 80% 20%, rgba(34, 211, 238, 0.03) 0%, transparent 50%),
+        var(--bg-primary);
+}
+
+/* ============================================
+   Dim Overlay
+   ============================================ */
+.dim-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 50;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+.dim-overlay.active {
+    opacity: 1;
+}
+
+/* ============================================
+   Particle Canvas
+   ============================================ */
+#particle-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* ============================================
+   Car Image Layer
+   ============================================ */
+.car-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.car-img {
+    position: absolute;
+    pointer-events: auto;
+    object-fit: contain;
+    will-change: transform, filter, opacity;
+    cursor: pointer;
+    transition: filter 0.4s ease;
+    opacity: 0;
+    border-radius: 8px;
+}
+
+/* ============================================
+   Dashboard Logs Widget
+   ============================================ */
+.logs-widget {
+    position: fixed;
+    bottom: 24px;
+    right: 28px;
+    z-index: 180;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    cursor: default;
+}
+
+.logs-img {
+    width: 180px;
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid rgba(251, 146, 60, 0.25);
+    background: rgba(10, 10, 18, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow:
+        0 0 20px rgba(251, 146, 60, 0.12),
+        0 0 50px rgba(251, 146, 60, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: box-shadow 0.4s ease, border-color 0.4s ease;
+    animation: logsPulse 3s ease-in-out infinite;
+}
+
+.logs-widget:hover .logs-img {
+    border-color: rgba(251, 146, 60, 0.5);
+    box-shadow:
+        0 0 30px rgba(251, 146, 60, 0.25),
+        0 0 60px rgba(251, 146, 60, 0.1);
+}
+
+.logs-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--neon-orange);
+    text-shadow: 0 0 8px rgba(251, 146, 60, 0.4);
+    opacity: 0.7;
+}
+
+@keyframes logsPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(251, 146, 60, 0.12), 0 0 50px rgba(251, 146, 60, 0.05); }
+    50%      { box-shadow: 0 0 28px rgba(251, 146, 60, 0.2),  0 0 60px rgba(251, 146, 60, 0.08); }
+}
+
+/* ============================================
+   Central CTA Button — Enhanced Hover
+   ============================================ */
+.cta-wrapper {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    opacity: 0;
+}
+
+.download-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px 52px;
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(1.5);
+    -webkit-backdrop-filter: blur(20px) saturate(1.5);
+    color: var(--text-primary);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    outline: none;
+    overflow: hidden;
+    box-shadow:
+        0 0 30px rgba(0, 212, 255, 0.15),
+        0 0 60px rgba(0, 212, 255, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: box-shadow 0.4s ease, border-color 0.4s ease, transform 0.25s ease;
+}
+
+.download-btn:hover {
+    border-color: rgba(0, 212, 255, 0.7);
+    box-shadow:
+        0 0 50px rgba(0, 212, 255, 0.4),
+        0 0 100px rgba(0, 212, 255, 0.15),
+        0 0 150px rgba(168, 85, 247, 0.08),
+        0 0 200px rgba(34, 211, 238, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: scale(1.06);
+}
+
+.download-btn:active {
+    transform: scale(0.96);
+}
+
+/* Animated glow ring */
+.btn-glow {
+    position: absolute;
+    inset: -3px;
+    border-radius: 19px;
+    background: conic-gradient(
+        from 0deg,
+        var(--neon-blue),
+        var(--neon-purple),
+        var(--neon-cyan),
+        var(--neon-blue)
+    );
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.4s ease;
+    animation: glowSpin 3s linear infinite;
+}
+
+.download-btn:hover .btn-glow {
+    opacity: 0.75;
+}
+
+@keyframes glowSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* Shimmer sweep across button on hover */
+.btn-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        105deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.08) 45%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.08) 55%,
+        transparent 70%
+    );
+    z-index: 1;
+    pointer-events: none;
+    transition: none;
+}
+
+.download-btn:hover .btn-shimmer {
+    animation: shimmerSweep 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmerSweep {
+    0%   { left: -100%; }
+    100% { left: 200%; }
+}
+
+/* Pulsing border on hover */
+.download-btn::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 17px;
+    border: 2px solid transparent;
+    background: conic-gradient(from 0deg, var(--neon-blue), transparent 30%, var(--neon-purple), transparent 60%, var(--neon-cyan), transparent 90%, var(--neon-blue)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    animation: glowSpin 3s linear infinite;
+    pointer-events: none;
+}
+
+.download-btn:hover::before {
+    opacity: 1;
+}
+
+/* Floating particles around button on hover */
+.download-btn::after {
+    content: '';
+    position: absolute;
+    inset: -20px;
+    border-radius: 30px;
+    background: radial-gradient(circle at 20% 30%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 50% 10%, rgba(34, 211, 238, 0.1) 0%, transparent 40%);
+    opacity: 0;
+    z-index: -2;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    animation: btnAura 2s ease-in-out infinite alternate;
+}
+
+.download-btn:hover::after {
+    opacity: 1;
+}
+
+@keyframes btnAura {
+    0%   { transform: scale(1) rotate(0deg); filter: blur(8px); }
+    100% { transform: scale(1.15) rotate(5deg); filter: blur(12px); }
+}
+
+.btn-content {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    z-index: 2;
+}
+
+.btn-icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 6px var(--neon-blue));
+    transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.download-btn:hover .btn-icon {
+    filter: drop-shadow(0 0 12px var(--neon-blue)) drop-shadow(0 0 20px var(--neon-cyan));
+    animation: iconBounce 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes iconBounce {
+    0%   { transform: translateY(0); }
+    100% { transform: translateY(3px); }
+}
+
+.btn-text {
+    white-space: nowrap;
+    transition: text-shadow 0.3s ease;
+}
+
+.download-btn:hover .btn-text {
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.4), 0 0 20px rgba(0, 212, 255, 0.2);
+}
+
+/* Status message */
+.status-msg {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+    letter-spacing: 0.1em;
+    min-height: 1.2em;
+    opacity: 0;
+}
+
+/* ============================================
+   Brand
+   ============================================ */
+.brand {
+    position: fixed;
+    top: 28px;
+    left: 36px;
+    z-index: 300;
+    opacity: 0;
+}
+
+.brand-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+.brand-accent {
+    color: var(--neon-blue);
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 768px) {
+    .download-btn {
+        padding: 16px 32px;
+        font-size: 0.82rem;
+        border-radius: 12px;
+    }
+
+    .btn-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .brand-name {
+        font-size: 1.1rem;
+    }
+
+    .brand {
+        top: 16px;
+        left: 20px;
+    }
+
+    .status-msg {
+        font-size: 0.72rem;
+    }
+
+    .logs-widget {
+        bottom: 12px;
+        right: 12px;
+    }
+
+    .logs-img {
+        width: 110px;
+    }
+
+    .logs-label {
+        font-size: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .download-btn {
+        padding: 14px 24px;
+        font-size: 0.75rem;
+    }
+
+    .brand-name {
+        font-size: 0.95rem;
+    }
+
+    .logs-img {
+        width: 90px;
+    }
+}

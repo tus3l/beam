@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JBeam Vault — BeamNG Mods</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Main Container -->
+    <div id="app" class="main-container">
+
+        <!-- Dim Overlay (for hover focus effect) -->
+        <div id="dim-overlay" class="dim-overlay"></div>
+
+        <!-- Particle Canvas -->
+        <canvas id="particle-canvas"></canvas>
+
+        <!-- Car Image Layers -->
+        <div id="car-layer" class="car-layer">
+            <img src="car1.png" alt="Car 1" class="car-img" data-depth="0.2" data-index="0">
+            <img src="car2.png" alt="Car 2" class="car-img" data-depth="0.4" data-index="1">
+            <img src="car3.png" alt="Car 3" class="car-img" data-depth="0.6" data-index="2">
+            <img src="car4.png" alt="Car 4" class="car-img" data-depth="0.8" data-index="3">
+            <img src="car5.png" alt="Car 5" class="car-img" data-depth="0.3" data-index="4">
+            <img src="car6.png" alt="Car 6" class="car-img" data-depth="0.5" data-index="5">
+            <img src="car7.png" alt="Car 7" class="car-img" data-depth="0.7" data-index="6">
+            <img src="car8.png" alt="Car 8" class="car-img" data-depth="0.9" data-index="7">
+            <img src="car9.png" alt="Car 9" class="car-img" data-depth="0.35" data-index="8">
+        </div>
+
+        <!-- Dashboard Logs -->
+        <div id="logs-widget" class="logs-widget">
+            <img src="logs.png" alt="Dashboard Indicators" class="logs-img">
+            <span class="logs-label">DASHBOARD</span>
+        </div>
+
+        <!-- Central Download Button -->
+        <div id="cta-wrapper" class="cta-wrapper">
+            <button id="download-btn" class="download-btn" type="button">
+                <span class="btn-glow"></span>
+                <span class="btn-shimmer"></span>
+                <span class="btn-content">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    <span class="btn-text">Download BeamNG Mods</span>
+                </span>
+            </button>
+            <p id="status-msg" class="status-msg"></p>
+        </div>
+
+        <!-- Logo / Brand -->
+        <div class="brand">
+            <span class="brand-name">JBeam<span class="brand-accent">Vault</span></span>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
