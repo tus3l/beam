@@ -6,9 +6,9 @@
     "use strict";
 
     // ── Configuration ──────────────────────────
-    const CAR_COUNT = 9;
+    const CAR_COUNT = 18;
     const isMobile = window.innerWidth <= 768;
-    const visibleCars = isMobile ? 5 : CAR_COUNT;
+    const visibleCars = isMobile ? 8 : CAR_COUNT;
 
     // Cars spread EVERYWHERE — corners, edges, all around
     const carLayouts = [
@@ -24,6 +24,16 @@
         { left: 30,  top: 78,  scale: 0.48, z: 5,  blur: 3,   rot: 3   },
         { left: 58,  top: 74,  scale: 0.50, z: 6,  blur: 2.5, rot: -3  },
         { left: 82,  top: 68,  scale: 0.58, z: 10, blur: 1,   rot: 7   },
+        // ── Extra cars ──
+        { left: 20,  top: 10,  scale: 0.38, z: 2,  blur: 5,   rot: -2  },
+        { left: 55,  top: 15,  scale: 0.45, z: 4,  blur: 3,   rot: 4   },
+        { left: 90,  top: 42,  scale: 0.40, z: 3,  blur: 4,   rot: -6  },
+        { left: 10,  top: 55,  scale: 0.52, z: 7,  blur: 2,   rot: 3   },
+        { left: 45,  top: 48,  scale: 0.35, z: 2,  blur: 5,   rot: -1  },
+        { left: 92,  top: 15,  scale: 0.55, z: 9,  blur: 1,   rot: 8   },
+        { left: 15,  top: 85,  scale: 0.42, z: 4,  blur: 3,   rot: -4  },
+        { left: 70,  top: 85,  scale: 0.38, z: 3,  blur: 4,   rot: 2   },
+        { left: 48,  top: 60,  scale: 0.44, z: 5,  blur: 2,   rot: -5  },
     ];
 
     const mobileLayouts = [
@@ -32,6 +42,9 @@
         { left: -6,  top: 50,  scale: 0.45, z: 14, blur: 0, rot: -3 },
         { left: 65,  top: 55,  scale: 0.42, z: 12, blur: 0, rot: 5  },
         { left: 25,  top: 78,  scale: 0.30, z: 4,  blur: 3, rot: -2 },
+        { left: 40,  top: 20,  scale: 0.28, z: 3,  blur: 4, rot: 2  },
+        { left: 75,  top: 35,  scale: 0.33, z: 5,  blur: 2, rot: -4 },
+        { left: 10,  top: 70,  scale: 0.30, z: 4,  blur: 3, rot: 3  },
     ];
 
     const layouts = isMobile ? mobileLayouts : carLayouts;
@@ -43,7 +56,7 @@
     const statusMsg    = document.getElementById("status-msg");
     const dimOverlay   = document.getElementById("dim-overlay");
     const brand        = document.querySelector(".brand");
-    const logsWidget   = document.getElementById("logs-widget");
+    const logsBg       = document.getElementById("logs-bg");
     const canvas       = document.getElementById("particle-canvas");
     const ctx          = canvas.getContext("2d");
 
@@ -198,52 +211,52 @@
         { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
         "-=0.7"
     );
-    masterTL.fromTo(logsWidget,
-        { opacity: 0, x: 40, scale: 0.8 },
-        { opacity: 1, x: 0, scale: 1, duration: 0.7, ease: "back.out(1.5)" },
+    masterTL.fromTo(logsBg,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.7, ease: "power2.out" },
         "-=0.5"
     );
 
-    // ── Continuous Floating (more visible) ─────
+    // ── Autonomous Car Movement (slow drift + respawn loop) ─────
     carData.forEach((car) => {
-        const floatY  = 12 + Math.random() * 18;
-        const floatX  = 5  + Math.random() * 10;
-        const floatR  = 1.5 + Math.random() * 3;
-        const durY    = 3.5 + Math.random() * 4;
-        const durX    = 4   + Math.random() * 5;
-        const durR    = 5   + Math.random() * 4;
+        const speed = 0.05 + Math.random() * 0.15;
+        const dirX = (Math.random() > 0.5 ? 1 : -1) * speed;
+        const dirY = (Math.random() > 0.5 ? 1 : -1) * speed * 0.5;
+        const rotSpeed = (Math.random() - 0.5) * 0.03;
+
+        let posX = 0, posY = 0, rot = car.layout.rot;
+
+        function driftCar() {
+            posX += dirX;
+            posY += dirY;
+            rot += rotSpeed;
+
+            // Respawn when off-screen
+            const rect = car.el.getBoundingClientRect();
+            if (rect.right < -100) posX += W + 300;
+            if (rect.left > W + 100) posX -= W + 300;
+            if (rect.bottom < -100) posY += H + 300;
+            if (rect.top > H + 100) posY -= H + 300;
+
+            gsap.set(car.el, {
+                x: posX,
+                y: posY,
+                rotation: rot,
+            });
+            requestAnimationFrame(driftCar);
+        }
+        driftCar();
+
+        // Gentle floating bobbing
+        const floatY  = 6 + Math.random() * 8;
+        const floatX  = 3 + Math.random() * 5;
+        const durY    = 5 + Math.random() * 5;
+        const durX    = 6 + Math.random() * 6;
         const d       = Math.random() * 3;
 
         gsap.to(car.el, { y: `+=${floatY}`, duration: durY, repeat: -1, yoyo: true, ease: "sine.inOut", delay: d });
         gsap.to(car.el, { x: `+=${floatX}`, duration: durX, repeat: -1, yoyo: true, ease: "sine.inOut", delay: d + 0.5 });
-        gsap.to(car.el, { rotation: car.layout.rot + floatR, duration: durR, repeat: -1, yoyo: true, ease: "sine.inOut", delay: d + 1 });
     });
-
-    // Logs gentle float
-    gsap.to(logsWidget, { y: -6, duration: 3, repeat: -1, yoyo: true, ease: "sine.inOut" });
-
-    // ── Mouse Parallax ─────────────────────────
-    let mouseX = 0, mouseY = 0, targetMX = 0, targetMY = 0;
-
-    if (!isMobile) {
-        document.addEventListener("mousemove", (e) => {
-            targetMX = (e.clientX / W - 0.5) * 2;
-            targetMY = (e.clientY / H - 0.5) * 2;
-        });
-
-        (function parallaxLoop() {
-            mouseX = lerp(mouseX, targetMX, 0.04);
-            mouseY = lerp(mouseY, targetMY, 0.04);
-            carData.forEach((car) => {
-                gsap.set(car.el, {
-                    x: `+=${mouseX * car.depth * 35 * 0.012}`,
-                    y: `+=${mouseY * car.depth * 20 * 0.012}`,
-                });
-            });
-            gsap.set(ctaWrapper, { x: mouseX * 6, y: mouseY * 4 });
-            requestAnimationFrame(parallaxLoop);
-        })();
-    }
 
     // ── Enhanced Button Hover (GSAP) ───────────
     let btnHoverTL = null;
@@ -300,22 +313,6 @@
         });
     });
 
-    // ── Hover Effect on Cars ───────────────────
-    carData.forEach((car) => {
-        car.el.addEventListener("mouseenter", () => {
-            dimOverlay.classList.add("active");
-            gsap.to(car.el, { scale: 1.15, duration: 0.4, ease: "power2.out", overwrite: "auto" });
-            car.el.style.zIndex = 100;
-            car.el.style.filter = "none";
-        });
-        car.el.addEventListener("mouseleave", () => {
-            dimOverlay.classList.remove("active");
-            gsap.to(car.el, { scale: 1, duration: 0.4, ease: "power2.out", overwrite: "auto" });
-            car.el.style.zIndex = car.origZ;
-            car.el.style.filter = car.origBlur > 0 ? `blur(${car.origBlur}px)` : "none";
-        });
-    });
-
     // ── Button Click — Shockwave + Scatter ─────
     let isScattered = false;
 
@@ -362,6 +359,80 @@
             isScattered = false;
         }, 2500);
     });
+
+    // ── Magnetic Glow: button reacts to nearby cars ──
+    let btnGlowIntensity = 0;
+    (function magneticGlowLoop() {
+        const bRect = downloadBtn.getBoundingClientRect();
+        const bcx = bRect.left + bRect.width / 2;
+        const bcy = bRect.top + bRect.height / 2;
+        let closestDist = Infinity;
+
+        carData.forEach((car) => {
+            const rect = car.el.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const dist = Math.sqrt((cx - bcx) ** 2 + (cy - bcy) ** 2);
+            if (dist < closestDist) closestDist = dist;
+        });
+
+        const maxRange = 500;
+        const targetIntensity = Math.max(0, 1 - closestDist / maxRange);
+        btnGlowIntensity = lerp(btnGlowIntensity, targetIntensity, 0.05);
+
+        const glowSize = 30 + btnGlowIntensity * 60;
+        const glowAlpha = 0.15 + btnGlowIntensity * 0.4;
+        downloadBtn.style.boxShadow = `0 0 ${glowSize}px rgba(0, 212, 255, ${glowAlpha}), 0 0 ${glowSize * 2}px rgba(0, 212, 255, ${glowAlpha * 0.3}), 0 0 ${glowSize * 3}px rgba(168, 85, 247, ${glowAlpha * 0.15})`;
+        downloadBtn.style.borderColor = `rgba(0, 212, 255, ${0.25 + btnGlowIntensity * 0.5})`;
+
+        requestAnimationFrame(magneticGlowLoop);
+    })();
+
+    // ── JBeam Data Fragments around cars ────────
+    const jbeamTexts = ["nodes", "beams", "torsion", "slots", "flexbodies", "vars", "wheels", "props", "0.5", "1.0", "FLT_MAX", "ref:", "id:", "\u25CB", "\u25A0", "\u25B3"];
+    const dataFragColors = ["rgba(0,212,255,0.35)", "rgba(168,85,247,0.3)", "rgba(34,211,238,0.3)", "rgba(251,146,60,0.25)"];
+
+    (function dataFragLoop() {
+        // Spawn data fragments near random visible cars
+        if (Math.random() > 0.85 && carData.length > 0) {
+            const car = carData[Math.floor(Math.random() * carData.length)];
+            const rect = car.el.getBoundingClientRect();
+            if (rect.width > 0) {
+                const fx = rect.left + Math.random() * rect.width;
+                const fy = rect.top + Math.random() * rect.height;
+                const color = dataFragColors[Math.floor(Math.random() * dataFragColors.length)];
+                const frag = new Particle(fx, fy, color);
+                frag.vx = (Math.random() - 0.5) * 1.5;
+                frag.vy = -0.5 - Math.random() * 1.5;
+                frag.decay = 0.004 + Math.random() * 0.006;
+                frag.size = 1.5 + Math.random() * 2;
+                particles.push(frag);
+
+                // Also draw text fragments on canvas
+                const txt = jbeamTexts[Math.floor(Math.random() * jbeamTexts.length)];
+                const textFrag = {
+                    x: fx, y: fy,
+                    vx: (Math.random() - 0.5) * 0.8,
+                    vy: -0.4 - Math.random() * 0.8,
+                    life: 1,
+                    decay: 0.006 + Math.random() * 0.008,
+                    text: txt,
+                    color: color,
+                    update() { this.x += this.vx; this.y += this.vy; this.life -= this.decay; },
+                    draw() {
+                        ctx.save();
+                        ctx.globalAlpha = this.life * 0.7;
+                        ctx.fillStyle = this.color;
+                        ctx.font = `${9 + Math.random() * 3}px 'Orbitron', monospace`;
+                        ctx.fillText(this.text, this.x, this.y);
+                        ctx.restore();
+                    }
+                };
+                particles.push(textFrag);
+            }
+        }
+        requestAnimationFrame(dataFragLoop);
+    })();
 
     // ── Ambient Particles ──────────────────────
     (function ambientLoop() {
